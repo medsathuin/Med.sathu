@@ -17,4 +17,7 @@ MonitoringService.setSocketIO(io);
 MonitoringService.startMonitoring(60000); // Collect metrics every minute
 
 // Export for other services
-module.exports = { app, server, io };
+module.exports = { app, server, io };const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
