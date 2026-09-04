@@ -1,6 +1,7 @@
 "dependencies": {
   "@react-native-clipboard/clipboard": "^1.11.2"
-}cd mobile-app
+}
+cd mobile-app
 npm install{
   "name": "medsathu-mobile",
   "version": "1.0.0",
@@ -60,6 +61,7 @@ npm install{
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.0",
     "typescript": "^5.0.0"
-  }cd ios
+  }
+cd ios
 pod install
 }
