@@ -1,0 +1,62 @@
+// Add this to security.routes.js
+
+// ========== MOBILE SECURITY LOG ==========
+router.post('/mobile-log', auth, async (req, res) => {
+  try {
+    const { event, details, deviceId } = req.body;
+    
+    await SecurityLog.create({
+      user: req.userId,
+      action: 'suspicious_activity',
+      resourceType: 'user',
+      details: {
+        metadata: {
+          event,
+          details,
+          deviceId,
+          platform: 'mobile',
+        },
+      },
+      severity: event.includes('failed') ? 'warning' : 'info',
+      isSuspicious: event.includes('failed') || event.includes('tampered'),
+    });
+    
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// ========== VALIDATE DEVICE ==========
+router.post('/validate-device', auth, async (req, res) => {
+  try {
+    const { deviceId, deviceName, platform } = req.body;
+    
+    // Check if device is already registered
+    const user = await User.findById(req.userId);
+    if (user) {
+      const devices = user.security.deviceFingerprints || [];
+      const exists = devices.includes(deviceId);
+      
+      if (!exists) {
+        // Add new device
+        user.security.deviceFingerprints.push(deviceId);
+        await user.save();
+        
+        // Send notification about new device
+        await NotificationService.createNotification({
+          userId: req.userId,
+          type: 'system_alert',
+          title: '🔐 New Device Login',
+          message: `A new device (${deviceName || platform}) logged into your account.`,
+          priority: 'high',
+          channels: { email: true, push: true, inApp: true },
+        });
+      }
+    }
+    
+    res.json({ success: true, isNewDevice: !exists });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
