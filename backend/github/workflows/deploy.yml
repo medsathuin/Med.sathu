@@ -1,0 +1,61 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ========== CHECKOUT CODE ==========
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # ========== SETUP NODE ==========
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # ========== INSTALL BACKEND DEPENDENCIES ==========
+      - name: Install Backend Dependencies
+        run: |
+          cd backend
+          npm ci
+
+      # ========== RUN TESTS ==========
+      - name: Run Backend Tests
+        run: |
+          cd backend
+          npm test
+        continue-on-error: true
+
+      # ========== BUILD WEBSITE ==========
+      - name: Build Website
+        run: |
+          cd website
+          npm ci
+          npm run build
+
+      # ========== DEPLOY TO AWS ==========
+      - name: Deploy to AWS EC2
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /var/www/medsathu
+            git pull origin main
+            sudo docker-compose down
+            sudo docker-compose up -d --build
+
+      # ========== SEND DEPLOYMENT NOTIFICATION ==========
+      - name: Send Deployment Notification
+        run: |
+          curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d "text=🚀 Medsathu.inn deployed successfully!"
