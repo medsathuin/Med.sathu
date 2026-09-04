@@ -71,3 +71,5 @@
     "nodemon": "^3.0.1"
   }
 }
+cd backend
+npm install
