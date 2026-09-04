@@ -58,5 +58,6 @@ npm install{
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.0",
     "typescript": "^5.0.0"
-  }
+  }cd ios
+pod install
 }
