@@ -70,9 +70,6 @@
   "devDependencies": {
     "nodemon": "^3.0.1"
   }
-}cd backend
-npm install
-cd backend
-npm install
-cd backend
-npm install stripe razorpay crypto
+}```json
+"scripts": {
+  "start": "node src/server.js"
