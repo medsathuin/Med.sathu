@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "Medsathu.inn",
+    "slug": "medsathu-inn",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1e3a8a"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.medsathu.inn",
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Allow Medsathu.inn to use Face ID for secure login",
+        "NSCameraUsageDescription": "Allow Medsathu.inn to access camera for profile photos and documents",
+        "NSPhotoLibraryUsageDescription": "Allow Medsathu.inn to access photos for notes and profiles",
+        "NSMicrophoneUsageDescription": "Allow Medsathu.inn to access microphone for voice notes",
+        "UIBackgroundModes": ["fetch", "remote-notification"]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1e3a8a"
+      },
+      "package": "com.medsathu.inn",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.POST_NOTIFICATIONS"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "API_URL": "https://api.medsathu.inn"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD"
+    },
+    "notification": {
+      "icon": "./assets/notification-icon.png",
+      "color": "#1e3a8a"
+    }
+  }
+}
