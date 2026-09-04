@@ -1,0 +1,27 @@
+# ========== PAYMENT GATEWAYS ==========
+# Razorpay
+RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxx
+RAZORPAY_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxx
+RAZORPAY_WEBHOOK_SECRET=xxxxxxxxxxxxxxxxxxxxxxxx
+
+# Stripe
+STRIPE_PUBLISHABLE_KEY=pk_test_xxxxxxxxxx
+STRIPE_SECRET_KEY=sk_test_xxxxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxx
+
+# PayU
+PAYU_MERCHANT_KEY=xxxxxxxxxx
+PAYU_MERCHANT_SALT=xxxxxxxxxx
+
+# PhonePe
+PHONEPAY_MERCHANT_ID=XXXXXXXXXX
+PHONEPAY_SALT_KEY=xxxxxxxxxx
+PHONEPAY_SALT_INDEX=1
+
+# PayPal
+PAYPAL_CLIENT_ID=xxxxxxxxxx
+PAYPAL_SECRET=xxxxxxxxxx
+
+# ========== PAYMENT CONFIG ==========
+FRONTEND_URL=http://localhost:3000
+API_URL=http://localhost:5000
