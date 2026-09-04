@@ -74,3 +74,5 @@
 npm install
 cd backend
 npm install
+cd backend
+npm install stripe razorpay crypto
