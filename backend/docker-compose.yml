@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+  # ========== MONGODB ==========
+  mongodb:
+    image: mongo:7
+    container_name: medsathu-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: medsathu
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - medsathu-network
+
+  # ========== REDIS ==========
+  redis:
+    image: redis:7-alpine
+    container_name: medsathu-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - medsathu-network
+
+  # ========== BACKEND ==========
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: medsathu-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+      MONGODB_URI: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mongodb:27017/medsathu?authSource=admin
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASS: ${EMAIL_PASS}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - medsathu-network
+    volumes:
+      - backend_uploads:/app/uploads
+
+  # ========== WEBSITE ==========
+  website:
+    build:
+      context: .
+      dockerfile: Dockerfile.website
+    container_name: medsathu-website
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: ${API_URL}
+    depends_on:
+      - backend
+    networks:
+      - medsathu-network
+
+  # ========== NGINX (Reverse Proxy) ==========
+  nginx:
+    image: nginx:alpine
+    container_name: medsathu-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - backend
+      - website
+    networks:
+      - medsathu-network
+
+networks:
+  medsathu-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  redis_data:
+  backend_uploads:
